@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import format from "date-fns/format";
 
 import HabitListItem from "./HabitListItem";
 
@@ -177,7 +178,11 @@ export default function HabitList(props) {
 
               {showTimePicker && (
                 <DateTimePicker
-                  value={newHabitTime !== null ? newHabitTime : new Date()}
+                  value={
+                    newHabitTime !== null
+                      ? newHabitTime
+                      : new Date(new Date().setSeconds(0))
+                  }
                   mode="time"
                   is24Hour={true}
                   display="default"
@@ -185,16 +190,21 @@ export default function HabitList(props) {
                     if (event.type === "dismissed") {
                     } else {
                       if (selectedDate) {
-                        const currentDate = selectedDate;
+                        const currentDate = new Date(
+                          selectedDate.setSeconds(0)
+                        );
+
                         setNewHabitTime(currentDate);
                         setIsTimeSelected(true);
                         const formattedTime = currentDate.toLocaleTimeString(
                           "en-US",
                           {
-                            hour: "numeric",
-                            minute: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
                           }
                         );
+
                         setNewHabitTimeString(formattedTime);
                       } else {
                         setNewHabitTime(null);
@@ -223,6 +233,7 @@ export default function HabitList(props) {
                           ).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
+                            hour12: true,
                           })}`
                         : "No time set"}
                     </Text>
@@ -302,7 +313,7 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    backgroundColor: "rgba(248, 248, 248, 0.8)", // semi-transparent background
+    backgroundColor: "rgba(248, 248, 248, 0.8)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -313,11 +324,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   button: {
     borderRadius: 10,

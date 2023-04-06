@@ -1,21 +1,20 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import format from "date-fns/format";
 
 export default function HabitListItem(props) {
+  const time = props.habit.time
+    ? format(new Date(props.habit.time), "h:mm aaa")
+    : null;
+
   return (
     <TouchableOpacity
       style={styles.item}
       onPress={() => props.onEdit(props.habit)}
     >
       <Text style={styles.title}>{props.habit.title}</Text>
-      {props.habit.time && (
-        <Text style={styles.time}>
-          {new Date(props.habit.time).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </Text>
-      )}
+      {time && <Text style={styles.time}>{time}</Text>}
+
       <View style={styles.separator} />
     </TouchableOpacity>
   );

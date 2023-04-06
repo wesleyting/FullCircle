@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import format from "date-fns/format";
 
 export default function HabitCircleItem({ habit, updateCompletedHabits }) {
   const [isCrossedOut, setIsCrossedOut] = useState(habit.completed);
@@ -11,12 +12,7 @@ export default function HabitCircleItem({ habit, updateCompletedHabits }) {
   }
 
   const formattedTime = useMemo(() => {
-    return habit.time
-      ? new Date(habit.time).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : null;
+    return habit.time ? format(new Date(habit.time), "h:mm aaa") : null;
   }, [habit.time]);
 
   return (
